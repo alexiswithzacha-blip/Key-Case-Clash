@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "KnifeCase"
+version = "1.0.0"
+id = "artifacts/knifecase"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24466
+
+[services.development]
+run = "pnpm --filter @workspace/knifecase run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/knifecase", "run", "build" ]
+publicDir = "artifacts/knifecase/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24466"
+BASE_PATH = "/"
