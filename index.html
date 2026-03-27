@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KnifeCase</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ════════════════ AUTH ════════════════ -->
+<div id="auth-screen" class="auth-screen">
+  <div class="auth-box">
+    <div class="logo-wrap">
+      <span class="logo-knife">🔪</span>
+      <span class="logo-text"><span class="lt-k">Knife</span><span class="lt-c">Case</span></span>
+    </div>
+
+    <div class="auth-tabs">
+      <button id="atab-login" class="atab active" onclick="showAuthTab('login')">LOGIN</button>
+      <button id="atab-register" class="atab" onclick="showAuthTab('register')">REGISTER</button>
+    </div>
+
+    <form id="login-form" class="aform" onsubmit="handleLogin(event)">
+      <div class="field">
+        <label>USERNAME</label>
+        <input type="text" id="l-user" placeholder="Enter username" autocomplete="username" required />
+      </div>
+      <div class="field">
+        <label>PASSWORD</label>
+        <input type="password" id="l-pass" placeholder="Enter password" autocomplete="current-password" required />
+      </div>
+      <div class="aerr" id="l-err"></div>
+      <button type="submit" class="btn-auth">LOGIN</button>
+    </form>
+
+    <form id="register-form" class="aform hidden" onsubmit="handleRegister(event)">
+      <div class="field">
+        <label>USERNAME</label>
+        <input type="text" id="r-user" placeholder="Choose username (3+ chars)" autocomplete="username" required />
+      </div>
+      <div class="field">
+        <label>PASSWORD</label>
+        <input type="password" id="r-pass" placeholder="Choose password (6+ chars)" autocomplete="new-password" required />
+      </div>
+      <div class="aerr" id="r-err"></div>
+      <button type="submit" class="btn-auth">CREATE ACCOUNT</button>
+      <p class="anote">You start with 0 keys — ask an admin for some!</p>
+    </form>
+  </div>
+</div>
+
+<!-- ════════════════ GAME ════════════════ -->
+<div id="game-screen" class="hidden">
+
+  <nav class="navbar">
+    <div class="nav-logo">
+      <span class="logo-knife-sm">🔪</span>
+      <span class="logo-text-sm"><span class="lt-k">Knife</span><span class="lt-c">Case</span></span>
+    </div>
+    <div class="nav-tabs">
+      <button class="ntab active" id="ntab-case"      onclick="switchTab('case')">🗡️ CASE</button>
+      <button class="ntab"        id="ntab-inventory" onclick="switchTab('inventory')">🎒 INVENTORY</button>
+      <button class="ntab admin-only hidden" id="ntab-admin" onclick="switchTab('admin')">⚙️ ADMIN</button>
+    </div>
+    <div class="nav-right">
+      <div class="keys-badge">
+        <span>🗝️</span>
+        <span id="keys-count">0</span>
+        <span class="kb-lbl">KEYS</span>
+      </div>
+      <div class="user-info">👤 <span id="uname-display"></span></div>
+      <button class="btn-logout" onclick="logout()">LOGOUT</button>
+    </div>
+  </nav>
+
+  <!-- ── CASE TAB ── -->
+  <div id="tab-case" class="gtab">
+    <div class="case-hero">
+      <div class="case-icon-wrap">
+        <div class="case-icon">📦</div>
+        <div class="case-glow"></div>
+      </div>
+      <div class="case-info">
+        <h1 class="case-title">KILLER CASE</h1>
+        <p class="case-sub">One spin. One blade. Claim your fate.</p>
+        <div class="case-cost">🗝️ 10 keys per open</div>
+      </div>
+    </div>
+
+    <div class="reel-section">
+      <div class="reel-frame">
+        <div class="reel-centerline"></div>
+        <div class="reel-arrow-top">▼</div>
+        <div class="reel-arrow-bot">▲</div>
+        <div class="reel-viewport" id="reel-viewport">
+          <div class="reel-strip" id="reel-strip"></div>
+        </div>
+        <div class="reel-fade-l"></div>
+        <div class="reel-fade-r"></div>
+      </div>
+      <div class="reel-controls">
+        <button class="btn-spin" id="open-btn" onclick="openCase()">
+          ⚡ OPEN CASE
+        </button>
+      </div>
+    </div>
+
+    <div class="possible-section">
+      <h3 class="section-lbl">POSSIBLE DROPS — ALL EQUAL CHANCE (1 in 7)</h3>
+      <div class="possible-grid" id="possible-grid"></div>
+    </div>
+  </div>
+
+  <!-- ── INVENTORY TAB ── -->
+  <div id="tab-inventory" class="gtab hidden">
+    <div class="inv-topbar">
+      <h2 class="section-lbl">YOUR INVENTORY</h2>
+      <span id="inv-badge" class="inv-badge">0 items</span>
+    </div>
+    <div id="inv-grid" class="inv-grid">
+      <div class="empty-msg">No items yet — open a case!</div>
+    </div>
+    <div id="wb-bar" class="wb-bar hidden">
+      <div class="wb-left">
+        <span id="sel-count" class="wb-count">0 selected</span>
+        <span class="wb-dot">•</span>
+        <span id="sel-robux" class="wb-val">0 Robux</span>
+      </div>
+      <button class="btn-withdraw" onclick="withdraw()">🎮 WITHDRAW TO ROBUX</button>
+    </div>
+  </div>
+
+  <!-- ── ADMIN TAB ── -->
+  <div id="tab-admin" class="gtab hidden">
+    <h2 class="section-lbl" style="margin-bottom:6px;">⚙️ ADMIN PANEL</h2>
+    <p class="admin-sub">Give keys to players</p>
+    <div id="users-list" class="users-list"></div>
+  </div>
+
+</div>
+
+<!-- ════════════════ WIN MODAL ════════════════ -->
+<div id="win-modal" class="modal hidden">
+  <div class="modal-bg" onclick="closeModal()"></div>
+  <div class="modal-card">
+    <div class="modal-glow" id="modal-glow"></div>
+    <div class="mwin-lbl">YOU WON!</div>
+    <div class="mknife-wrap" id="mknife-wrap">
+      <span id="mknife-emoji" class="mknife-emoji"></span>
+    </div>
+    <div id="mname" class="mname"></div>
+    <div id="mbadge" class="rarity-badge mbadge"></div>
+    <div id="mcoins" class="mcoins"></div>
+    <div id="mkeys"  class="mkeys"></div>
+    <button class="btn-claim" onclick="closeModal()">CLAIM ITEM</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
